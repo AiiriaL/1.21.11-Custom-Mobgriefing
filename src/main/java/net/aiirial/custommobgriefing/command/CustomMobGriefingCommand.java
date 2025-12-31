@@ -30,6 +30,29 @@ public class CustomMobGriefingCommand {
         dispatcher.register(
                 Commands.literal("custommobgriefing")
                         .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
+
+                        // /custommobgriefing list
+                        .then(Commands.literal("list")
+                                .executes(ctx -> {
+                                    ctx.getSource().sendSuccess(
+                                            () -> Component.literal("§6Custom MobGriefing Status:"),
+                                            false
+                                    );
+
+                                    CustomMobGriefingConfig.getAllSettings().forEach((mob, allowed) -> {
+                                        ctx.getSource().sendSuccess(
+                                                () -> Component.literal(
+                                                        " §7- §e" + mob + ": " +
+                                                                (allowed ? "§aTRUE" : "§cFALSE")
+                                                ),
+                                                false
+                                        );
+                                    });
+                                    return 1;
+                                })
+                        )
+
+                        // /custommobgriefing <mob> <true|false>
                         .then(Commands.argument("mob", StringArgumentType.word())
                                 .suggests((ctx, builder) -> {
                                     VALID_MOBS.forEach(builder::suggest);
@@ -61,4 +84,6 @@ public class CustomMobGriefingCommand {
                         )
         );
     }
+
 }
+
